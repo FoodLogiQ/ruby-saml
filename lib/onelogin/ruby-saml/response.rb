@@ -71,6 +71,32 @@ module OneLogin
         end
       end
 
+      # A hash of alle the attributes with the response. Allows multiple values per key, will always be an array, so make sure to account for that when using.
+      def multiple_attributes
+        @attr_statements ||= begin
+          result = {}
+
+          stmt_element = xpath_first_from_signed_assertion('/a:AttributeStatement')
+          return {} if stmt_element.nil?
+
+          stmt_element.elements.each do |attr_element|
+            name  = attr_element.attributes["Name"]
+            attr_array = []
+            attr_element.elements.each do |elm|
+              attr_array.push(elm.text)
+            end
+            value = attr_array
+            result[name] = value
+          end
+
+          result.keys.each do |key|
+            result[key.intern] = result[key]
+          end
+
+          result
+        end
+      end
+
       # When this user session should expire at latest
       def session_expires_at
         @expires_at ||= begin
