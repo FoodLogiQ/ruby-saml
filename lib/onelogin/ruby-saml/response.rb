@@ -73,7 +73,7 @@ module OneLogin
 
       # A hash of alle the attributes with the response. Allows multiple values per key, will always be an array, so make sure to account for that when using.
       def multiple_attributes
-        @attr_statements ||= begin
+        @attr_multiple_statements ||= begin
           result = {}
 
           stmt_element = xpath_first_from_signed_assertion('/a:AttributeStatement')
